@@ -65,25 +65,17 @@ $(function(){
     $("#btnTakeAttendance").click(function(){
         chrome.storage.sync.get(['user','token','meetId'],function(res){
             console.log(res);
-                    // fetch('http://192.168.137.67:8000/api/login', {
-                    //     method: 'POST',
-                    //     body: JSON.stringify({
-                    //         email: email,
-                    //         password: pass,
-                    //     }),
-                    //     headers: {
-                    //         'Content-type': 'application/json',
-                    //     },
-                    // })
-                    fetch('https://jsonplaceholder.typicode.com/posts', {
+                    var authtoken = "JWT "+res.token;
+                    var meetlink = "https://meet.google.com/"+res.meetId;
+                    fetch('http://192.168.137.67:8000/api/take-attendance', {
                         method: 'POST',
                         body: JSON.stringify({
-                            title: 'foo',
-                            body: 'bar',
-                            userId: 1,
+                            meet_link: meetlink,
+                            sender: res.user
                         }),
                         headers: {
-                            'Content-type': 'application/json; charset=UTF-8',
+                            'Content-type': 'application/json',
+                            'Authorization': authtoken
                         },
                     })
                     .then(function(response){
@@ -92,6 +84,9 @@ $(function(){
                     })
                     .then(function(json){
                         console.log(json);
+                        if(json.id){
+                            close();
+                        }
                     });
         });
     });
