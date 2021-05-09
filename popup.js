@@ -65,8 +65,9 @@ $(function(){
     $("#btnTakeAttendance").click(function(){
         chrome.storage.sync.get(['user','token','meetId'],function(res){
             console.log(res);
-                    var authtoken = "JWT "+res.token;
-                    var meetlink = "https://meet.google.com/"+res.meetId;
+                var authtoken = "JWT "+res.token;
+                var meetlink = "https://meet.google.com/"+res.meetId;
+                if(res.meetId!="none"){
                     fetch('http://192.168.137.67:8000/api/take-attendance', {
                         method: 'POST',
                         body: JSON.stringify({
@@ -88,6 +89,7 @@ $(function(){
                             close();
                         }
                     });
+                }
         });
     });
 
